@@ -1,0 +1,119 @@
+
+
+
+                                                   pseudocode for ridge regression
+
+
+
+
+### RIDGE REGRESSION
+
+Ridge regression is a regularized linear regression technique used to mitigate the problem of overfitting in statistical models. It is a modification of ordinary least squares regression that adds a regularization term to the cost function, which penalizes large coefficient values.
+
+###Concrete Compressive Strength
+
+The Concrete Compressive Strength problem is a regression task where the goal is to predict the compressive strength of concrete based on its various attributes such as cement content, water-cement ratio, coarse aggregate, fine aggregate, etc.
+
+The dataset for this problem contains 1,030 instances with eight input variables and one output variable. The input variables are:
+
+Cement (kg/m^3)
+Blast Furnace Slag (kg/m^3)
+Fly Ash (kg/m^3)
+Water (kg/m^3)
+Superplasticizer (kg/m^3)
+Coarse Aggregate (kg/m^3)
+Fine Aggregate (kg/m^3)
+Age (day)
+The output variable is the compressive strength of concrete in mega-pascals (MPa)
+
+
+### Importing Libraries
+Here we are using
+ Numpy – To perform mathematical operations on arrays.
+ Pandas – To load the Data frame.
+ Matplotlib – To visualize the data features.
+ Seaborn – To see the correlation between features using a heat map.
+
+
+### LOAD THE DATASET
+data = load_dataset()
+The dataset contains 9 features and 1030 rows.
+
+### Exploratory Data Analysis – EDA
+ Command .shape shows the Total rows and columns present in the data.
+ Command .info() gives information about the data type
+ Command .describe() is used to view some of the basic statistical details like percentile, mean, std, count, min, and max values.
+ Command .isnull().sum() shows the presence of null values in each column.
+
+
+Here we are using different plots for visualizations like Histogram, Scatter plot, Count plot, Bar plot, Box plot etc.
+Preprocessing
+
+
+### Identifying and Filling the Null values
+1 Filling the numeric null values with mean
+   numeric.fillna(numeric.mean())
+2 Imputing categorical null values with Most_frequent
+SimpleImputer – one of the methods to fill the null values
+
+
+imputer = SimpleImputer(strategy="mode")
+train_data = imputer.fit_transform(train_data)
+test_data = imputer.transform(test_data)
+
+
+### Encoding Categorical Data
+pd.get_dummies() – dummifies the cateregorical variables
+
+
+Splitting Dataset into Training & Test set
+    a. Select the first n samples for the training set, where n is the calculated number of samples
+    b. Select the remaining samples for the test set
+train_data, test_data = train_test_split(data, test_size=test_size)
+
+
+
+
+### MODEL BUILDING
+ 
+# Inputs:
+#   X: an n-by-d matrix of n instances with d features each
+#   y: an n-dimensional vector of target variable values
+#   alpha: the regularization parameter for ridge regression
+
+# 1. Perform simple linear regression to calculate the coefficients
+# Calculate the means of X and y
+X_mean = mean(X, axis=0)
+y_mean = mean(y)
+
+# Calculate the numerator and denominator of the slope
+numerator = dot(X.T, (y - y_mean))
+denominator = dot(X.T, (X - X_mean))
+slope = numerator / denominator
+intercept = y_mean - dot(X_mean, slope)
+
+# 2. Calculate the coefficients of the ridge regression model
+# Define the regularization matrix
+reg_matrix = alpha * identity(d)
+
+# Solve for the coefficients
+ridge_coefficients = inv(X.T @ X + reg_matrix) @ X.T @ y
+
+# 3. Compare the performance of the simple linear regression and ridge regression models
+# Calculate the predictions for the simple linear regression model
+simple_linear_predictions = X @ slope + intercept
+
+# Calculate the predictions for the ridge regression model
+ridge_predictions = X @ ridge_coefficients
+
+# Calculate the mean squared error for each model
+mse_simple_linear = mean((y - simple_linear_predictions) ** 2)
+mse_ridge = mean((y - ridge_predictions) ** 2)
+
+# Output:
+#   slope: the slope of the simple linear regression line
+#   intercept: the intercept of the simple linear regression line
+#   ridge_coefficients: the coefficients of the ridge regression model
+#   mse_simple_linear: the mean squared error of the simple linear regression model
+#   mse_ridge: the mean squared error of the ridge regression model
+
